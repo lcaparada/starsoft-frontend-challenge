@@ -1,0 +1,14 @@
+@import "../../app/variables";
+
+.footer {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-poppins;
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba($color-white, 0.44);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
