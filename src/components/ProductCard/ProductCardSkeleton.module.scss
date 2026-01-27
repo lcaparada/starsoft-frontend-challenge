@@ -2,7 +2,7 @@
 @use "sass:color";
 
 .card {
-  width: fit-content;
+  width: 100%;
   background-color: $color-darker;
   border-radius: $radius-md;
   padding: 20px;
