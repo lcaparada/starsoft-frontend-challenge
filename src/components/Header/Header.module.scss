@@ -11,6 +11,26 @@
   padding-top: 23.5px;
   padding-bottom: 23.5px;
   border-bottom: 1px solid rgba($color-white, 0.21);
+
+  @media (max-width: $breakpoint-tablet) {
+    padding-left: 30px;
+    padding-right: 30px;
+    height: 80px;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 70px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  @media (max-width: 480px) {
+    padding-left: 16px;
+    padding-right: 16px;
+    height: 60px;
+  }
 }
 
 .bag {
@@ -28,5 +48,50 @@
 
   &:hover {
     scale: 1.05;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 16px;
+    gap: 6px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+    gap: 4px;
+  }
+
+  // Ajustar tamanho do ícone da sacola
+  svg,
+  img {
+    @media (max-width: $breakpoint-mobile) {
+      width: 28px !important;
+      height: 28px !important;
+    }
+
+    @media (max-width: 480px) {
+      width: 24px !important;
+      height: 24px !important;
+    }
+  }
+}
+
+// Ajustar tamanho do logo
+.header {
+  svg[data-testid="icon-logo"],
+  img[alt*="logo"] {
+    @media (max-width: $breakpoint-tablet) {
+      width: 80px !important;
+      height: auto !important;
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+      width: 60px !important;
+      height: auto !important;
+    }
+
+    @media (max-width: 480px) {
+      width: 50px !important;
+      height: auto !important;
+    }
   }
 }

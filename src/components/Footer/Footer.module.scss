@@ -11,4 +11,20 @@
   color: rgba($color-white, 0.44);
   text-transform: uppercase;
   letter-spacing: 2px;
+  padding: 0 20px;
+  text-align: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    height: 60px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 0 16px;
+  }
+
+  @media (max-width: 480px) {
+    height: 50px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    padding: 0 12px;
+  }
 }
