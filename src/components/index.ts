@@ -4,5 +4,6 @@ export * from "./Button/Button";
 export * from "./Header/Header";
 export * from "./CartCard/CartCard";
 export * from "./ProductCard/ProductCard";
+export * from "./ProductCard/ProductCardSkeleton";
 export * from "./ProgressBar/ProgressBar";
 export * from "./Counter/Counter";

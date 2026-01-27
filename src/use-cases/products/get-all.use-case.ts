@@ -38,11 +38,14 @@ export const useGetAllProducts = ({
   });
 
   return { 
-    data, 
+    data,
+    products: data?.pages.flatMap((page) => page.products) ?? [],
     isLoading, 
     error, 
     fetchNextPage, 
     hasNextPage, 
-    isFetchingNextPage 
+    isFetchingNextPage,
+    total: data?.pages[0]?.count ?? 0,
+    totalPages: data?.pages[0]?.pagination.totalPages ?? 0,
   };
 };

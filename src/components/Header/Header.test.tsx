@@ -24,10 +24,10 @@ describe("Header", () => {
     expect(logoIcon).toHaveAttribute("data-size", "101");
   });
 
-  it("should render bag section", () => {
+  it("should render bag button", () => {
     const { container } = render(<Header />);
-    const bagSection = container.querySelector("section");
-    expect(bagSection).toBeInTheDocument();
+    const bagButton = container.querySelector("button");
+    expect(bagButton).toBeInTheDocument();
   });
 
   it("should render bag icon", () => {
@@ -42,11 +42,11 @@ describe("Header", () => {
     expect(screen.getByText("0")).toBeInTheDocument();
   });
 
-  it("should render bag icon and count inside bag section", () => {
+  it("should render bag icon and count inside bag button", () => {
     const { container } = render(<Header />);
-    const bagSection = container.querySelector("section");
-    const bagIcon = bagSection?.querySelector('[data-testid="icon-bag"]');
-    const bagCount = bagSection?.querySelector("span");
+    const bagButton = container.querySelector("button");
+    const bagIcon = bagButton?.querySelector('[data-testid="icon-bag"]');
+    const bagCount = bagButton?.querySelector("span");
 
     expect(bagIcon).toBeInTheDocument();
     expect(bagCount).toBeInTheDocument();
@@ -57,20 +57,20 @@ describe("Header", () => {
     const { container } = render(<Header />);
     const header = container.querySelector("header");
     const logoIcon = header?.querySelector('[data-testid="icon-logo"]');
-    const bagSection = header?.querySelector("section");
+    const bagButton = header?.querySelector("button");
 
     expect(header).toBeInTheDocument();
     expect(logoIcon).toBeInTheDocument();
-    expect(bagSection).toBeInTheDocument();
+    expect(bagButton).toBeInTheDocument();
   });
 
-  it("should render logo icon before bag section", () => {
+  it("should render logo icon before bag button", () => {
     const { container } = render(<Header />);
     const header = container.querySelector("header");
     const children = header?.children;
 
     expect(children?.[0]).toHaveAttribute("data-testid", "icon-logo");
-    expect(children?.[1]?.tagName).toBe("SECTION");
+    expect(children?.[1]?.tagName).toBe("BUTTON");
   });
 });
 
