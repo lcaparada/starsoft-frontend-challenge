@@ -4,6 +4,7 @@ import "./globals.scss";
 import styles from "./layout.module.scss";
 import { Header } from "../components";
 import { Footer } from "../components/Footer/Footer";
+import { ReactQueryProvider } from "../providers";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -26,11 +27,13 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} antialiased`}
       >
-        <Header />
-        <main className={styles.main}>
-          {children}
-        </main>
-        <Footer />
+        <ReactQueryProvider>
+          <Header />
+          <main className={styles.main}>
+            {children}
+          </main>
+          <Footer />
+        </ReactQueryProvider>
       </body>
     </html>
   );
