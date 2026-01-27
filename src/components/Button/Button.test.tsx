@@ -162,4 +162,69 @@ describe("Button", () => {
     expect(screen.getByTestId("icon-trash")).toBeInTheDocument();
     expect(screen.queryByTestId("icon-plus")).not.toBeInTheDocument();
   });
+
+  it("should render with full size by default", () => {
+    const { container } = render(<Button label="Button" />);
+    const button = container.querySelector("button");
+    expect(button).toHaveClass("sizeFull");
+  });
+
+  it("should render with small size when size prop is sm", () => {
+    const { container } = render(<Button label="Button" size="sm" />);
+    const button = container.querySelector("button");
+    expect(button).toHaveClass("sizeSm");
+  });
+
+  it("should render with medium size when size prop is md", () => {
+    const { container } = render(<Button label="Button" size="md" />);
+    const button = container.querySelector("button");
+    expect(button).toHaveClass("sizeMd");
+  });
+
+  it("should render with large size when size prop is lg", () => {
+    const { container } = render(<Button label="Button" size="lg" />);
+    const button = container.querySelector("button");
+    expect(button).toHaveClass("sizeLg");
+  });
+
+  it("should render with full size when size prop is full", () => {
+    const { container } = render(<Button label="Button" size="full" />);
+    const button = container.querySelector("button");
+    expect(button).toHaveClass("sizeFull");
+  });
+
+  it("should apply size class along with variant class", () => {
+    const { container } = render(
+      <Button label="Button" variant="secondary" size="md" />
+    );
+    const button = container.querySelector("button");
+    expect(button).toHaveClass("secondary");
+    expect(button).toHaveClass("sizeMd");
+  });
+
+  it("should apply size class along with icon class", () => {
+    const { container } = render(
+      <Button label="Button" icon="plus" size="sm" />
+    );
+    const button = container.querySelector("button");
+    expect(button).toHaveClass("sizeSm");
+    expect(button).toHaveClass("withIcon");
+  });
+
+  it("should apply all classes together (variant, size, icon, custom)", () => {
+    const { container } = render(
+      <Button
+        label="Button"
+        variant="secondary"
+        size="lg"
+        icon="trash"
+        className="custom-class"
+      />
+    );
+    const button = container.querySelector("button");
+    expect(button).toHaveClass("secondary");
+    expect(button).toHaveClass("sizeLg");
+    expect(button).toHaveClass("withIcon");
+    expect(button).toHaveClass("custom-class");
+  });
 });
