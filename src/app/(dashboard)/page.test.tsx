@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import Home from "./page";
 import { useGetAllProducts } from "@/src/use-cases";
 import React from "react";
@@ -57,9 +57,15 @@ jest.mock("@/src/components", () => {
   };
 });
 
-jest.spyOn(React, "lazy").mockImplementation(() => {
-  return mockEmptyState as unknown as React.LazyExoticComponent<React.ComponentType>;
-});
+// Mock React.lazy para resolver imediatamente de forma síncrona
+const mockLazyComponent = mockEmptyState as unknown as React.LazyExoticComponent<React.ComponentType>;
+jest.spyOn(React, "lazy").mockImplementation(() => mockLazyComponent);
+
+// Mock Suspense para não suspender durante os testes
+const MockSuspense = ({ children }: { children: React.ReactNode; fallback?: React.ReactNode }) => {
+  return <>{children}</>;
+};
+jest.replaceProperty(React, "Suspense", MockSuspense);
 
 const mockUseGetAllProducts = useGetAllProducts as jest.MockedFunction<
   typeof useGetAllProducts
@@ -87,7 +93,7 @@ describe("Home Page", () => {
     jest.clearAllMocks();
   });
 
-  it("should render loading skeletons when isLoading is true", () => {
+  it("should render loading skeletons when isLoading is true", async () => {
     mockUseGetAllProducts.mockReturnValue({
       products: [],
       isLoading: true,
@@ -100,12 +106,14 @@ describe("Home Page", () => {
       error: null,
     });
 
-    render(<Home />);
+    await act(async () => {
+      render(<Home />);
+    });
     const skeletons = screen.getAllByTestId("product-card-skeleton");
     expect(skeletons).toHaveLength(8);
   });
 
-  it("should render products when loaded", () => {
+  it("should render products when loaded", async () => {
     mockUseGetAllProducts.mockReturnValue({
       products: mockProducts,
       isLoading: false,
@@ -118,7 +126,9 @@ describe("Home Page", () => {
       error: null,
     });
 
-    render(<Home />);
+    await act(async () => {
+      render(<Home />);
+    });
     expect(screen.getByTestId("product-card-0")).toBeInTheDocument();
     expect(screen.getByTestId("product-card-1")).toBeInTheDocument();
     expect(screen.getByText("Product 1")).toBeInTheDocument();
@@ -273,7 +283,9 @@ describe("Home Page", () => {
       error: null,
     });
 
-    render(<Home />);
+    await act(async () => {
+      render(<Home />);
+    });
 
     await waitFor(() => {
       expect(screen.getByTestId("empty-state")).toBeInTheDocument();
