@@ -19,9 +19,10 @@
 
 .emptyStateContainer {
   width: 100%;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 60vh;
+  padding: 189px 136.5px;
 }
 
