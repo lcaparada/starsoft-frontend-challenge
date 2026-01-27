@@ -2,14 +2,13 @@ import Image from "next/image"
 import styles from "./ProductCard.module.scss"
 import { Button } from "../Button/Button";
 import { Product } from "@/src/types";
-
-
+import { ImageWithLoading } from "../ImageWithLoading/ImageWithLoading";
 
 export const ProductCard = ({ title, description, price, image }: Product) => {
   return (
     <div className={styles.card}>
       <section className={styles.imageContainer}>
-        <Image
+        <ImageWithLoading
           src={image}
           alt="Product Card"
           width={100}
