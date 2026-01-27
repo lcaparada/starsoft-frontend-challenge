@@ -1,11 +1,19 @@
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { Header } from "./Header";
 
 jest.mock("../Icon/Icon", () => ({
   Icon: ({ name, size }: { name: string; size: number }) => (
     <div data-testid={`icon-${name}`} data-size={size}>
       {name}
+    </div>
+  ),
+}));
+
+jest.mock("../Cart/Cart", () => ({
+  Cart: ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => (
+    <div data-testid="cart" data-is-open={isOpen.toString()}>
+      <button onClick={onClose}>Fechar</button>
     </div>
   ),
 }));
@@ -71,6 +79,43 @@ describe("Header", () => {
 
     expect(children?.[0]).toHaveAttribute("data-testid", "icon-logo");
     expect(children?.[1]?.tagName).toBe("BUTTON");
+  });
+
+  it("should open cart when bag button is clicked", async () => {
+    render(<Header />);
+    const bagButton = screen.getByLabelText("Abrir carrinho");
+
+    fireEvent.click(bagButton);
+
+    await waitFor(() => {
+      const cart = screen.queryByTestId("cart");
+      expect(cart).toBeInTheDocument();
+      expect(cart).toHaveAttribute("data-is-open", "true");
+    });
+  });
+
+  it("should close cart when close button is clicked", async () => {
+    render(<Header />);
+    const bagButton = screen.getByLabelText("Abrir carrinho");
+
+    fireEvent.click(bagButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("cart")).toBeInTheDocument();
+    });
+
+    const closeButton = screen.getByText("Fechar");
+    fireEvent.click(closeButton);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("cart")).not.toBeInTheDocument();
+    });
+  });
+
+  it("should have aria-label on bag button", () => {
+    render(<Header />);
+    const bagButton = screen.getByLabelText("Abrir carrinho");
+    expect(bagButton).toBeInTheDocument();
   });
 });
 

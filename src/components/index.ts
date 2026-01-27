@@ -8,3 +8,4 @@ export * from "./ProductCard/ProductCardSkeleton";
 export * from "./ProgressBar/ProgressBar";
 export * from "./Counter/Counter";
 export * from "./EmptyState/EmptyState";
+export * from "./EmptyState/EmptyStateSkeleton";

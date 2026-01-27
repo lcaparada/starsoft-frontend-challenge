@@ -1,13 +1,18 @@
 "use client";
 
+import { lazy, Suspense } from "react";
 import {
   ProductCard,
   ProductCardSkeleton,
   Button,
-  EmptyState,
+  EmptyStateSkeleton,
 } from "@/src/components";
 import styles from "./page.module.scss";
 import { useGetAllProducts } from "@/src/use-cases";
+
+const EmptyState = lazy(() =>
+  import("@/src/components").then((module) => ({ default: module.EmptyState }))
+);
 
 export default function Home() {
   const {
@@ -43,7 +48,9 @@ export default function Home() {
   if (products.length === 0 && !isLoading) {
     return (
       <div className={styles.emptyStateContainer}>
-        <EmptyState />
+        <Suspense fallback={<EmptyStateSkeleton />}>
+          <EmptyState />
+        </Suspense>
       </div>
     );
   }

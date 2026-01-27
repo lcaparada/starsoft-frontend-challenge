@@ -1,0 +1,64 @@
+@use "../../app/variables" as *;
+@use "sass:color";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.iconSkeleton {
+  width: 64px;
+  height: 64px;
+  border-radius: $radius-full;
+  background: linear-gradient(
+    90deg,
+    $color-gray 25%,
+    color.adjust($color-gray, $lightness: 5%) 50%,
+    $color-gray 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.titleSkeleton {
+  width: 280px;
+  height: 28px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    $color-gray 25%,
+    color.adjust($color-gray, $lightness: 5%) 50%,
+    $color-gray 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.descriptionSkeleton {
+  width: 350px;
+  height: 20px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    $color-gray 25%,
+    color.adjust($color-gray, $lightness: 5%) 50%,
+    $color-gray 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+

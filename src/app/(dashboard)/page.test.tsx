@@ -1,46 +1,65 @@
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import Home from "./page";
 import { useGetAllProducts } from "@/src/use-cases";
+import React from "react";
 
 jest.mock("@/src/use-cases", () => ({
   useGetAllProducts: jest.fn(),
 }));
 
-jest.mock("@/src/components", () => ({
-  ProductCard: ({ title, index }: { title: string; index?: number }) => (
-    <div data-testid={`product-card-${index}`}>{title}</div>
-  ),
-  ProductCardSkeleton: () => (
-    <div data-testid="product-card-skeleton">Skeleton</div>
-  ),
-  Button: ({
-    label,
-    onClick,
-    disabled,
-    percentage,
-  }: {
-    label: string;
-    onClick?: () => void;
-    disabled?: boolean;
-    percentage?: number;
-  }) => (
-    <button
-      data-testid="load-more-button"
-      onClick={onClick}
-      disabled={disabled}
-      data-percentage={percentage}
-    >
-      {label}
-    </button>
-  ),
-  EmptyState: ({ title, description }: { title?: string; description?: string }) => (
+const mockEmptyState = ({ title, description }: { title?: string; description?: string }) => (
+  <div data-testid="empty-state">
+    <h2>{title}</h2>
+    <p>{description}</p>
+  </div>
+);
+
+jest.mock("@/src/components", () => {
+  const mockEmptyStateComponent = ({ title, description }: { title?: string; description?: string }) => (
     <div data-testid="empty-state">
       <h2>{title}</h2>
       <p>{description}</p>
     </div>
-  ),
-}));
+  );
+
+  return {
+    ProductCard: ({ title, index }: { title: string; index?: number }) => (
+      <div data-testid={`product-card-${index}`}>{title}</div>
+    ),
+    ProductCardSkeleton: () => (
+      <div data-testid="product-card-skeleton">Skeleton</div>
+    ),
+    Button: ({
+      label,
+      onClick,
+      disabled,
+      percentage,
+    }: {
+      label: string;
+      onClick?: () => void;
+      disabled?: boolean;
+      percentage?: number;
+    }) => (
+      <button
+        data-testid="load-more-button"
+        onClick={onClick}
+        disabled={disabled}
+        data-percentage={percentage}
+      >
+        {label}
+      </button>
+    ),
+    EmptyState: mockEmptyStateComponent,
+    EmptyStateSkeleton: () => (
+      <div data-testid="empty-state-skeleton">Loading...</div>
+    ),
+  };
+});
+
+jest.spyOn(React, "lazy").mockImplementation(() => {
+  return mockEmptyState as unknown as React.LazyExoticComponent<React.ComponentType>;
+});
 
 const mockUseGetAllProducts = useGetAllProducts as jest.MockedFunction<
   typeof useGetAllProducts
@@ -241,7 +260,7 @@ describe("Home Page", () => {
     expect(mockFetchNextPage).not.toHaveBeenCalled();
   });
 
-  it("should render empty state when no products are available", () => {
+  it("should render empty state when no products are available", async () => {
     mockUseGetAllProducts.mockReturnValue({
       products: [],
       isLoading: false,
@@ -255,7 +274,11 @@ describe("Home Page", () => {
     });
 
     render(<Home />);
-    expect(screen.getByTestId("empty-state")).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByTestId("empty-state")).toBeInTheDocument();
+    });
+
     expect(screen.queryByTestId("load-more-button")).not.toBeInTheDocument();
     expect(screen.queryByTestId("product-card-0")).not.toBeInTheDocument();
   });
@@ -361,7 +384,6 @@ describe("Home Page", () => {
 
     render(<Home />);
     const button = screen.getByTestId("load-more-button");
-    // 1 product / 20 total = 5%
     expect(button).toHaveAttribute("data-percentage", "5");
   });
 
