@@ -1,6 +1,11 @@
 "use client";
 
-import { ProductCard, ProductCardSkeleton, Button } from "@/src/components";
+import {
+  ProductCard,
+  ProductCardSkeleton,
+  Button,
+  EmptyState,
+} from "@/src/components";
 import styles from "./page.module.scss";
 import { useGetAllProducts } from "@/src/use-cases";
 
@@ -31,6 +36,14 @@ export default function Home() {
         {Array.from({ length: 8 }).map((_, index) => (
           <ProductCardSkeleton key={index} />
         ))}
+      </div>
+    );
+  }
+
+  if (products.length === 0 && !isLoading) {
+    return (
+      <div className={styles.emptyStateContainer}>
+        <EmptyState />
       </div>
     );
   }

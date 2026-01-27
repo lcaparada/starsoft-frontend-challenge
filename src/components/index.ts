@@ -7,3 +7,4 @@ export * from "./ProductCard/ProductCard";
 export * from "./ProductCard/ProductCardSkeleton";
 export * from "./ProgressBar/ProgressBar";
 export * from "./Counter/Counter";
+export * from "./EmptyState/EmptyState";
