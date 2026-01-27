@@ -1,20 +1,22 @@
+// Colors
 $color-primary: #ff8310;
 $color-dark: #232323;
 $color-darker: #191a20;
 $color-gray: #393939;
 $color-light-gray: #cccccc;
 $color-white: #ffffff;
+$color-black: #22232C;
+$color-dark-gray: #373737;
+$color-dark-gray-2: #2B2B2B;
 
+// Backgrounds
 $background: $color-dark;
 $foreground: $color-darker;
-$surface: $color-white;
-$surface-dark: $color-dark;
-$border: $color-light-gray;
-$text-primary: $color-darker;
-$text-secondary: $color-gray;
-$text-light: $color-light-gray;
-$accent: $color-primary;
 
+// Radius
 $radius-md: 8px;
+$radius-full: 9999px;
 
+
+// Fonts
 $font-poppins: "Poppins", sans-serif;

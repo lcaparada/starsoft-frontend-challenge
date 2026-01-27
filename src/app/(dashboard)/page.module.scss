@@ -1,0 +1,12 @@
+@use "../../app/variables" as *;
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  overflow-y: auto;
+  padding: 189px 136.5px;
+}
+

@@ -1,4 +1,4 @@
-@import "../../app/variables";
+@use "../../app/variables" as *;
 
 .header {
   display: flex;
@@ -17,6 +17,8 @@
   display: flex;
   align-items: center;
   gap: 9px;
+  background: none;
+  border: none;
   font-family: $font-poppins;
   font-size: 20px;
   font-weight: 400;
@@ -25,6 +27,6 @@
   transition: all 0.3s ease;
 
   &:hover {
-    opacity: 0.8;
+    scale: 1.05;
   }
 }

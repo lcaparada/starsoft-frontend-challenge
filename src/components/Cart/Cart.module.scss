@@ -1,0 +1,118 @@
+@use "../../app/variables" as *;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
+}
+
+.cart {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 679px;
+  height: 100vh;
+  background-color: $background;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
+  padding-right: 31px;
+  padding-left: 31px;
+  padding-top: 63px;
+}
+
+.cart.open {
+  transform: translateX(0);
+}
+
+.cartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cartTitle {
+  font-family: $font-poppins;
+  font-size: 24px;
+  font-weight: 500;
+  color: $color-white;
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  left: 70px;
+  color: $color-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  padding: 8px;
+  border-radius: $radius-full;
+  background-color: $color-dark-gray;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba($color-white, 0.1);
+  }
+
+  &:active {
+    background-color: rgba($color-white, 0.15);
+  }
+}
+
+.cartCardsContainer {
+  margin-top: 165px;
+}
+
+.totalContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 74px;
+  margin-bottom: 70px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.totalText {
+  font-family: $font-poppins;
+  font-size: 24px;
+  font-weight: 700;
+  color: $color-white;
+}
+
+.totalValue {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.totalValueText {
+  font-family: $font-poppins;
+  font-size: 24px;
+  font-weight: 600;
+  color: $color-white;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+

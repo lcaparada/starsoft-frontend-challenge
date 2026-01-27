@@ -1,0 +1,15 @@
+@use "../../app/variables" as *;
+
+.progressBar {
+  width: 100%;
+  height: 10px;
+  background-color: $color-gray;
+  border-radius: $radius-md;
+}
+
+.progressBarFill {
+  width: 100%;
+  height: 100%;
+  background-color: $color-primary;
+  border-radius: $radius-md;
+}

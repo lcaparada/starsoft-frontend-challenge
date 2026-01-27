@@ -5,10 +5,10 @@ export const Header = () => {
   return (
     <header className={styles.header}>
       <Icon name="logo" size={101} />
-      <section className={styles.bag}>
+      <button className={styles.bag}>
         <Icon name="bag" size={33} />
         <span>0</span>
-      </section>
+      </button>
     </header>
   )
 }

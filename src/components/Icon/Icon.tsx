@@ -1,6 +1,4 @@
-import { Bag } from "@/src/assets";
-import { Logo } from "@/src/assets/icons/logo";
-
+import { ArrowLeft, Bag, Logo, Minus, Plus, Trash } from "@/src/assets";
 
 export type IconName = keyof typeof iconRegistry;
 
@@ -20,6 +18,10 @@ export const Icon = ({ name, size, ...svgProps }: IconProps) => {
 };
 
 const iconRegistry = {
-  logo: Logo,
   bag: Bag,
+  logo: Logo,
+  plus: Plus,
+  trash: Trash,
+  minus: Minus,
+  arrowLeft: ArrowLeft,
 };

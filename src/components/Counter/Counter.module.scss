@@ -1,0 +1,49 @@
+@use "../../app/variables" as *;
+
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: $color-dark;
+  border-radius: $radius-md;
+  padding: 8px 14.5px;
+  width: fit-content;
+}
+
+.counterButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $color-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-md;
+  transition: all 0.2s ease;
+  padding: 0;
+
+  &:hover:not(:disabled) {
+    background-color: rgba($color-white, 0.1);
+    scale: 1.05;
+  }
+
+  &:active:not(:disabled) {
+    scale: 0.95;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.counterValue {
+  font-family: $font-poppins;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-white;
+  text-align: center;
+}
+
