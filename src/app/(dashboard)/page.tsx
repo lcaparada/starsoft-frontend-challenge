@@ -38,8 +38,8 @@ export default function Home() {
   return (
     <>
       <div className={styles.container}>
-        {products.map((product) => (
-          <ProductCard key={product.id} {...product} />
+        {products.map((product, index) => (
+          <ProductCard key={product.id} {...product} index={index} />
         ))}
       </div>
       <div className={styles.loadMoreContainer}>

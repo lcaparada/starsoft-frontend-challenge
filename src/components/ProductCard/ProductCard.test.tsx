@@ -10,10 +10,27 @@ jest.mock("next/image", () => ({
   },
 }));
 
+jest.mock("motion/react", () => ({
+  motion: {
+    div: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+      <div className={className} {...props}>
+        {children}
+      </div>
+    ),
+  },
+}));
+
 jest.mock("../Button/Button", () => ({
   Button: ({ label }: { label: string }) => (
     <button data-testid="product-card-button">{label}</button>
   ),
+}));
+
+jest.mock("../ImageWithLoading/ImageWithLoading", () => ({
+  ImageWithLoading: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img {...props} alt={props.alt || ""} />;
+  },
 }));
 
 const mockProduct = {
@@ -110,6 +127,32 @@ describe("ProductCard", () => {
     expect(screen.getByText("Second Title")).toBeInTheDocument();
     expect(screen.getByText("200 ETH")).toBeInTheDocument();
     expect(screen.queryByText("First Title")).not.toBeInTheDocument();
+  });
+
+  it("should accept index prop for animation delay", () => {
+    const { container } = render(
+      <ProductCard {...mockProduct} index={2} />
+    );
+    const card = container.firstChild;
+    expect(card).toBeInTheDocument();
+  });
+
+  it("should render correctly without index prop", () => {
+    const { container } = render(<ProductCard {...mockProduct} />);
+    const card = container.firstChild;
+    expect(card).toBeInTheDocument();
+    expect(screen.getByText("Test Product")).toBeInTheDocument();
+  });
+
+  it("should render with different index values", () => {
+    const { rerender, container } = render(
+      <ProductCard {...mockProduct} index={0} />
+    );
+    expect(container.firstChild).toBeInTheDocument();
+
+    rerender(<ProductCard {...mockProduct} index={5} />);
+    expect(container.firstChild).toBeInTheDocument();
+    expect(screen.getByText("Test Product")).toBeInTheDocument();
   });
 });
 
