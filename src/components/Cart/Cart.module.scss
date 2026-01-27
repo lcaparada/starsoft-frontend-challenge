@@ -24,9 +24,9 @@
   transform: translateX(100%);
   transition: transform 0.3s ease;
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
-  padding-right: 31px;
-  padding-left: 31px;
-  padding-top: 63px;
+  padding: 63px 31px 40px 31px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .cart.open {
@@ -74,17 +74,37 @@
 }
 
 .cartCardsContainer {
-  margin-top: 165px;
+  margin-top: 80px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 20px;
+  width: 100%;
+}
+
+.emptyCart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: $color-light-gray;
+  font-family: $font-poppins;
+  font-size: 18px;
+  text-align: center;
 }
 
 .totalContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 74px;
-  margin-bottom: 70px;
-  padding-left: 20px;
-  padding-right: 20px;
+  margin-top: auto;
+  margin-bottom: 40px;
+  padding: 0;
+  flex-shrink: 0;
 }
 
 .totalText {

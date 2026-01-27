@@ -1,21 +1,32 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./ProductCard.module.scss";
 import { Button } from "../Button/Button";
 import { Product } from "@/src/types";
 import { ImageWithLoading } from "../ImageWithLoading/ImageWithLoading";
 import { motion } from "motion/react";
+import { useAppDispatch } from "@/src/store/hooks";
+import { addItem, openCart } from "@/src/store/slices/cart";
 
 interface ProductCardProps extends Product {
   index?: number;
 }
 
 export const ProductCard = ({
+  id,
   title,
   description,
   price,
   image,
   index = 0,
 }: ProductCardProps) => {
+  const dispatch = useAppDispatch();
+
+  const handleAddToCart = () => {
+    dispatch(addItem({ id, title, description, price, image }));
+    dispatch(openCart());
+  };
   return (
     <motion.div
       className={styles.card}
@@ -47,7 +58,7 @@ export const ProductCard = ({
             <Image src={"/images/eth-logo.png"} alt="ETH Logo" width={29} height={29} />
             <span>{price} ETH</span>
           </section>
-          <Button label="COMPRAR" />
+          <Button label="COMPRAR" onClick={handleAddToCart} />
         </div>
       </div>
     </motion.div>

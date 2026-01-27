@@ -11,14 +11,40 @@ jest.mock("../Icon/Icon", () => ({
 }));
 
 jest.mock("../Cart/Cart", () => ({
-  Cart: ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => (
-    <div data-testid="cart" data-is-open={isOpen.toString()}>
-      <button onClick={onClose}>Fechar</button>
-    </div>
-  ),
+  Cart: () => <div data-testid="cart">Cart</div>,
+}));
+
+const mockDispatch = jest.fn();
+
+jest.mock("@/src/store/hooks", () => ({
+  useAppDispatch: () => mockDispatch,
+  useAppSelector: (selector: any) => {
+    // Mock do selector selectCartItemsCount
+    if (selector.toString().includes("itemsCount") || selector.toString().includes("reduce")) {
+      return 0; // Default items count
+    }
+    return selector({
+      cart: {
+        items: [],
+        isOpen: false,
+        total: 0,
+      },
+    });
+  },
+}));
+
+jest.mock("@/src/store/slices/cart", () => ({
+  openCart: jest.fn(() => ({ type: "cart/openCart" })),
+  selectCartItemsCount: (state: any) => {
+    return state.cart?.items?.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0) || 0;
+  },
 }));
 
 describe("Header", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should render header element", () => {
     const { container } = render(<Header />);
     const header = container.querySelector("header");
@@ -81,35 +107,18 @@ describe("Header", () => {
     expect(children?.[1]?.tagName).toBe("BUTTON");
   });
 
-  it("should open cart when bag button is clicked", async () => {
+  it("should open cart when bag button is clicked", () => {
     render(<Header />);
     const bagButton = screen.getByLabelText("Abrir carrinho");
 
     fireEvent.click(bagButton);
 
-    await waitFor(() => {
-      const cart = screen.queryByTestId("cart");
-      expect(cart).toBeInTheDocument();
-      expect(cart).toHaveAttribute("data-is-open", "true");
-    });
+    expect(mockDispatch).toHaveBeenCalledWith({ type: "cart/openCart" });
   });
 
-  it("should close cart when close button is clicked", async () => {
+  it("should render cart component", () => {
     render(<Header />);
-    const bagButton = screen.getByLabelText("Abrir carrinho");
-
-    fireEvent.click(bagButton);
-
-    await waitFor(() => {
-      expect(screen.getByTestId("cart")).toBeInTheDocument();
-    });
-
-    const closeButton = screen.getByText("Fechar");
-    fireEvent.click(closeButton);
-
-    await waitFor(() => {
-      expect(screen.queryByTestId("cart")).not.toBeInTheDocument();
-    });
+    expect(screen.getByTestId("cart")).toBeInTheDocument();
   });
 
   it("should have aria-label on bag button", () => {

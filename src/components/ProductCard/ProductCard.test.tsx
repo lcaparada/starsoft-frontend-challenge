@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { ProductCard } from "./ProductCard";
 
 jest.mock("next/image", () => ({
@@ -12,17 +12,47 @@ jest.mock("next/image", () => ({
 
 jest.mock("motion/react", () => ({
   motion: {
-    div: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-      <div className={className} {...props}>
-        {children}
-      </div>
-    ),
+    div: ({
+      children,
+      className,
+      initial,
+      animate,
+      whileHover,
+      transition,
+      ...props
+    }: React.HTMLAttributes<HTMLDivElement> & {
+      initial?: unknown;
+      animate?: unknown;
+      whileHover?: unknown;
+      transition?: unknown;
+    }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const _ = { initial, animate, whileHover, transition };
+      return (
+        <div className={className} {...props}>
+          {children}
+        </div>
+      );
+    },
   },
 }));
 
+const mockDispatch = jest.fn();
+
+jest.mock("@/src/store/hooks", () => ({
+  useAppDispatch: () => mockDispatch,
+}));
+
+jest.mock("@/src/store/slices/cart", () => ({
+  addItem: jest.fn((product) => ({ type: "cart/addItem", payload: product })),
+  openCart: jest.fn(() => ({ type: "cart/openCart" })),
+}));
+
 jest.mock("../Button/Button", () => ({
-  Button: ({ label }: { label: string }) => (
-    <button data-testid="product-card-button">{label}</button>
+  Button: ({ label, onClick }: { label: string; onClick?: () => void }) => (
+    <button data-testid="product-card-button" onClick={onClick}>
+      {label}
+    </button>
   ),
 }));
 
@@ -42,6 +72,10 @@ const mockProduct = {
 };
 
 describe("ProductCard", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should render product card with provided title", () => {
     render(<ProductCard {...mockProduct} />);
     expect(screen.getByText("Test Product")).toBeInTheDocument();
@@ -153,6 +187,20 @@ describe("ProductCard", () => {
     rerender(<ProductCard {...mockProduct} index={5} />);
     expect(container.firstChild).toBeInTheDocument();
     expect(screen.getByText("Test Product")).toBeInTheDocument();
+  });
+
+  it("should dispatch addItem and openCart when buy button is clicked", () => {
+    render(<ProductCard {...mockProduct} />);
+    const button = screen.getByTestId("product-card-button");
+
+    fireEvent.click(button);
+
+    expect(mockDispatch).toHaveBeenCalledTimes(2);
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: "cart/addItem",
+      payload: mockProduct,
+    });
+    expect(mockDispatch).toHaveBeenCalledWith({ type: "cart/openCart" });
   });
 });
 
