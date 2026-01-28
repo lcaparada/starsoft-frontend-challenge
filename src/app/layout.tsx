@@ -5,6 +5,7 @@ import styles from "./layout.module.scss";
 import { Header } from "../components";
 import { Footer } from "../components/Footer/Footer";
 import { ReactQueryProvider, ReduxProvider } from "../providers";
+import { ServiceWorkerRegistration } from "../components/ServiceWorkerRegistration/ServiceWorkerRegistration";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -26,6 +27,12 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon-32x32.png",
   },
+  manifest: "/site.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Starsoft",
+  },
 };
 
 export default function RootLayout({
@@ -36,6 +43,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${poppins.variable} antialiased`}>
+        <ServiceWorkerRegistration />
         <ReactQueryProvider>
           <ReduxProvider>
             <Header />
