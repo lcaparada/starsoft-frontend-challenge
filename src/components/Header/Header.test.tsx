@@ -19,7 +19,6 @@ jest.mock("../Cart/Cart", () => ({
   Cart: mockCartComponent,
 }));
 
-// Mock React.lazy para resolver imediatamente sem suspender
 jest.spyOn(React, "lazy").mockImplementation(() => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const LazyComponent = (props: React.ComponentProps<typeof mockCartComponent>) => {
@@ -134,7 +133,6 @@ describe("Header", () => {
 
   it("should render cart component", async () => {
     render(<Header />);
-    // O Cart é lazy loaded, então aguardamos ele aparecer
     await waitFor(
       () => {
         expect(screen.getByTestId("cart")).toBeInTheDocument();

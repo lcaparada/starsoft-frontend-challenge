@@ -56,7 +56,6 @@ const mockCartItem = {
   quantity: 1,
 };
 
-// Mock do estado do carrinho que será modificado nos testes
 let mockCartState: CartState = {
   items: [mockCartItem],
   isOpen: true,
@@ -65,7 +64,6 @@ let mockCartState: CartState = {
 
 const mockDispatch = jest.fn();
 
-// Função para obter o estado mockado dinamicamente
 const getMockState = (): RootState => ({
   cart: mockCartState,
 });
