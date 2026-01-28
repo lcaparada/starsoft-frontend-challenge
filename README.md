@@ -404,18 +404,6 @@ $breakpoint-xl: 1440px;  // Desktop grande
 - Usuário não-root no Docker
 - Headers de segurança configurados
 
-## 📝 Próximos Passos
-
-Possíveis melhorias futuras:
-
-- [ ] Autenticação e autorização
-- [ ] Checkout e pagamento
-- [ ] Histórico de compras
-- [ ] Favoritos/Wishlist
-- [ ] Busca local (filtros no frontend)
-- [ ] PWA (Progressive Web App)
-- [ ] Internacionalização (i18n)
-
 ## 📄 Licença
 
 Este projeto foi desenvolvido como teste técnico.
