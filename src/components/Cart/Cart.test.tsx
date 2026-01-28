@@ -200,10 +200,12 @@ describe("Cart", () => {
 
   it("should render total value with ETH logo", () => {
     const { container } = render(<Cart />);
-    const ethLogo = container.querySelector('img[alt="ETH Logo"]');
+    const ethLogo = container.querySelector('img[src="/images/eth-logo.png"]');
     const totalValue = screen.getByText("32.00 ETH");
 
     expect(ethLogo).toBeInTheDocument();
+    expect(ethLogo).toHaveAttribute("alt", "");
+    expect(ethLogo).toHaveAttribute("aria-hidden", "true");
     expect(totalValue).toBeInTheDocument();
   });
 
@@ -233,13 +235,17 @@ describe("Cart", () => {
     const { container } = render(<Cart />);
     const cart = container.querySelector("aside");
     expect(cart?.className).not.toContain("open");
+    expect(cart).toHaveAttribute("aria-hidden", "true");
+    expect(cart).toHaveAttribute("hidden");
   });
 
   it("should render ETH logo in total with correct dimensions", () => {
     const { container } = render(<Cart />);
-    const ethLogo = container.querySelector('img[alt="ETH Logo"]');
+    const ethLogo = container.querySelector('img[src="/images/eth-logo.png"]');
     expect(ethLogo).toHaveAttribute("width", "29");
     expect(ethLogo).toHaveAttribute("height", "29");
+    expect(ethLogo).toHaveAttribute("alt", "");
+    expect(ethLogo).toHaveAttribute("aria-hidden", "true");
   });
 });
 

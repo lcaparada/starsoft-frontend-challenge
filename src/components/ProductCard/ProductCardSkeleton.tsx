@@ -1,8 +1,12 @@
 import styles from "./ProductCardSkeleton.module.scss";
 
-export const ProductCardSkeleton = () => {
+interface ProductCardSkeletonProps {
+  "aria-label"?: string;
+}
+
+export const ProductCardSkeleton = ({ "aria-label": ariaLabel }: ProductCardSkeletonProps = {}) => {
   return (
-    <div className={styles.card}>
+    <div className={styles.card} aria-label={ariaLabel || "Carregando produto"} aria-busy="true">
       <section className={styles.imageContainer}>
         <div className={styles.imageSkeleton} />
       </section>

@@ -11,8 +11,8 @@ export const EmptyState = ({
   description = "Não encontramos produtos no momento. Tente novamente mais tarde.",
 }: EmptyStateProps) => {
   return (
-    <div className={styles.container}>
-      <Icon name="bag" size={64} />
+    <div className={styles.container} role="status" aria-live="polite">
+      <Icon name="bag" size={64} aria-hidden="true" />
       <h2 className={styles.title}>{title}</h2>
       <p className={styles.description}>{description}</p>
     </div>

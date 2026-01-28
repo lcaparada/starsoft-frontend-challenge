@@ -12,26 +12,32 @@ jest.mock("next/image", () => ({
 
 jest.mock("motion/react", () => ({
   motion: {
-    div: ({
+    article: ({
       children,
       className,
       initial,
       animate,
       whileHover,
       transition,
+      itemScope,
+      itemType,
+      itemProp,
       ...props
-    }: React.HTMLAttributes<HTMLDivElement> & {
+    }: React.HTMLAttributes<HTMLElement> & {
       initial?: unknown;
       animate?: unknown;
       whileHover?: unknown;
       transition?: unknown;
+      itemScope?: boolean;
+      itemType?: string;
+      itemProp?: string;
     }) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const _ = { initial, animate, whileHover, transition };
+      const _ = { initial, animate, whileHover, transition, itemScope, itemType, itemProp };
       return (
-        <div className={className} {...props}>
+        <article className={className} {...props}>
           {children}
-        </div>
+        </article>
       );
     },
   },
@@ -83,22 +89,23 @@ describe("ProductCard", () => {
 
   it("should render product image with correct attributes", () => {
     const { container } = render(<ProductCard {...mockProduct} />);
-    const mainImage = container.querySelector('img[alt="Product Card"]');
+    const mainImage = container.querySelector(`img[alt="${mockProduct.title} - ${mockProduct.description}"]`);
 
     expect(mainImage).toBeInTheDocument();
     expect(mainImage).toHaveAttribute("src", "https://example.com/image.jpg");
-    expect(mainImage).toHaveAttribute("alt", "Product Card");
+    expect(mainImage).toHaveAttribute("alt", `${mockProduct.title} - ${mockProduct.description}`);
     expect(mainImage).toHaveAttribute("width", "100");
     expect(mainImage).toHaveAttribute("height", "100");
   });
 
   it("should render ETH logo image", () => {
     const { container } = render(<ProductCard {...mockProduct} />);
-    const ethLogo = container.querySelector('img[alt="ETH Logo"]');
+    const ethLogo = container.querySelector('img[src="/images/eth-logo.png"]');
 
     expect(ethLogo).toBeInTheDocument();
     expect(ethLogo).toHaveAttribute("src", "/images/eth-logo.png");
-    expect(ethLogo).toHaveAttribute("alt", "ETH Logo");
+    expect(ethLogo).toHaveAttribute("alt", "");
+    expect(ethLogo).toHaveAttribute("aria-hidden", "true");
   });
 
   it("should render product description", () => {
@@ -122,7 +129,7 @@ describe("ProductCard", () => {
     const { container } = render(<ProductCard {...mockProduct} />);
     const card = container.firstChild;
     expect(card).toBeInTheDocument();
-    expect((card as HTMLElement).tagName).toBe("DIV");
+    expect((card as HTMLElement).tagName).toBe("ARTICLE");
   });
 
   it("should render image container section", () => {
@@ -133,20 +140,23 @@ describe("ProductCard", () => {
 
   it("should render info container section with title and description", () => {
     render(<ProductCard {...mockProduct} />);
-    const title = screen.getByText("Test Product");
+    const title = screen.getByRole("heading", { name: "Test Product" });
     const description = screen.getByText("Test description for the product");
 
     expect(title).toBeInTheDocument();
+    expect(title.tagName).toBe("H3");
     expect(description).toBeInTheDocument();
+    expect(description.tagName).toBe("P");
   });
 
   it("should render price container section", () => {
     const { container } = render(<ProductCard {...mockProduct} />);
     const priceText = screen.getByText("100 ETH");
-    const ethLogo = container.querySelector('img[alt="ETH Logo"]');
+    const ethLogo = container.querySelector('img[src="/images/eth-logo.png"]');
 
     expect(priceText).toBeInTheDocument();
     expect(ethLogo).toBeInTheDocument();
+    expect(ethLogo).toHaveAttribute("aria-hidden", "true");
   });
 
   it("should update props when they change", () => {

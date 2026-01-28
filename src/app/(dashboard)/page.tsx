@@ -37,32 +37,32 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className={styles.container}>
+      <section className={styles.container} aria-label="Carregando produtos" aria-busy="true">
         {Array.from({ length: 8 }).map((_, index) => (
-          <ProductCardSkeleton key={index} />
+          <ProductCardSkeleton key={index} aria-label={`Carregando produto ${index + 1}`} />
         ))}
-      </div>
+      </section>
     );
   }
 
   if (products.length === 0 && !isLoading) {
     return (
-      <div className={styles.emptyStateContainer}>
+      <section className={styles.emptyStateContainer} aria-label="Nenhum produto encontrado">
         <Suspense fallback={<EmptyStateSkeleton />}>
           <EmptyState />
         </Suspense>
-      </div>
+      </section>
     );
   }
 
   return (
     <>
-      <div className={styles.container}>
+      <section className={styles.container} aria-label="Lista de produtos">
         {products.map((product, index) => (
           <ProductCard key={product.id} {...product} index={index} />
         ))}
-      </div>
-      <div className={styles.loadMoreContainer}>
+      </section>
+      <nav className={styles.loadMoreContainer} aria-label="Navegação de produtos">
         <Button
           label={buttonLabel}
           variant="secondary"
@@ -70,8 +70,9 @@ export default function Home() {
           percentage={isComplete ? 100 : progressPercentage}
           onClick={() => fetchNextPage()}
           disabled={isComplete || isFetchingNextPage}
+          aria-label={isComplete ? "Todos os produtos foram carregados" : `Carregar mais produtos. ${progressPercentage}% carregado`}
         />
-      </div>
+      </nav>
     </>
   );
 }

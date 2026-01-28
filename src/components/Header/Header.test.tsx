@@ -2,6 +2,8 @@ import "@testing-library/jest-dom";
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { Header } from "./Header";
 import React from "react";
+import { RootState } from "@/src/store";
+import { CartItem } from "@/src/store/slices/cart/cart.types";
 
 jest.mock("../Icon/Icon", () => ({
   Icon: ({ name, size }: { name: string; size: number }) => (
@@ -17,24 +19,19 @@ jest.mock("../Cart/Cart", () => ({
   Cart: mockCartComponent,
 }));
 
-// Mock React.lazy para resolver imediatamente de forma síncrona
 const mockLazyCart = mockCartComponent as unknown as React.LazyExoticComponent<React.ComponentType>;
 jest.spyOn(React, "lazy").mockImplementation(() => mockLazyCart);
 
-// Mock Suspense para não suspender durante os testes
-const MockSuspense = ({ children }: { children: React.ReactNode; fallback?: React.ReactNode }) => {
-  return <>{children}</>;
-};
-jest.replaceProperty(React, "Suspense", MockSuspense);
-
 const mockDispatch = jest.fn();
+
+type Selector<T> = (state: RootState) => T;
 
 jest.mock("@/src/store/hooks", () => ({
   useAppDispatch: () => mockDispatch,
-  useAppSelector: (selector: any) => {
+  useAppSelector: <T,>(selector: Selector<T>): T => {
     // Mock do selector selectCartItemsCount
     if (selector.toString().includes("itemsCount") || selector.toString().includes("reduce")) {
-      return 0; // Default items count
+      return 0 as T; // Default items count
     }
     return selector({
       cart: {
@@ -48,8 +45,8 @@ jest.mock("@/src/store/hooks", () => ({
 
 jest.mock("@/src/store/slices/cart", () => ({
   openCart: jest.fn(() => ({ type: "cart/openCart" })),
-  selectCartItemsCount: (state: any) => {
-    return state.cart?.items?.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0) || 0;
+  selectCartItemsCount: (state: RootState): number => {
+    return state.cart?.items?.reduce((sum: number, item: CartItem) => sum + (item.quantity || 0), 0) || 0;
   },
 }));
 
@@ -144,13 +141,14 @@ describe("Header", () => {
 
     expect(children?.[0]).toHaveAttribute("data-testid", "icon-logo");
     expect(children?.[1]?.tagName).toBe("BUTTON");
+    expect(children?.[0]?.parentElement?.tagName).toBe("HEADER");
   });
 
   it("should open cart when bag button is clicked", async () => {
     await act(async () => {
       render(<Header />);
     });
-    const bagButton = screen.getByLabelText("Abrir carrinho");
+    const bagButton = screen.getByLabelText(/Abrir carrinho/);
 
     await act(async () => {
       fireEvent.click(bagButton);
@@ -172,8 +170,10 @@ describe("Header", () => {
     await act(async () => {
       render(<Header />);
     });
-    const bagButton = screen.getByLabelText("Abrir carrinho");
+    // O aria-label agora inclui a contagem de itens
+    const bagButton = screen.getByLabelText(/Abrir carrinho/);
     expect(bagButton).toBeInTheDocument();
+    expect(bagButton).toHaveAttribute("aria-expanded", "false");
   });
 });
 

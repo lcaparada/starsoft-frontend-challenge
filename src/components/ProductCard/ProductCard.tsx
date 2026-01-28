@@ -28,7 +28,7 @@ export const ProductCard = ({
     dispatch(openCart());
   };
   return (
-    <motion.div
+    <motion.article
       className={styles.card}
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -38,29 +38,47 @@ export const ProductCard = ({
         delay: index * 0.05,
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
+      itemProp="name"
+      itemScope
+      itemType="https://schema.org/Product"
     >
-      <section className={styles.imageContainer}>
+      <section className={styles.imageContainer} aria-label={`Imagem do produto ${title}`}>
         <ImageWithLoading
           src={image}
-          alt="Product Card"
+          alt={`${title} - ${description}`}
           width={100}
           height={100}
           className={styles.image}
+          loading={index < 4 ? "eager" : "lazy"}
         />
       </section>
-      <div className={styles.content}>
+      <article className={styles.content}>
         <section className={styles.infoContainer}>
-          <span className={styles.title}>{title}</span>
-          <span className={styles.description}>{description}</span>
+          <h3 className={styles.title}>{title}</h3>
+          <p className={styles.description}>{description}</p>
         </section>
         <div className={styles.footer}>
-          <section className={styles.priceContainer}>
-            <Image src={"/images/eth-logo.png"} alt="ETH Logo" width={29} height={29} />
+          <section className={styles.priceContainer} aria-label={`Preço: ${price} ETH`}>
+            <Image
+              src={"/images/eth-logo.png"}
+              alt=""
+              width={29}
+              height={29}
+              aria-hidden="true"
+            />
             <span>{price} ETH</span>
           </section>
-          <Button label="COMPRAR" onClick={handleAddToCart} />
+          <Button
+            label="COMPRAR"
+            onClick={handleAddToCart}
+            aria-label={`Adicionar ${title} ao carrinho por ${price} ETH`}
+          />
         </div>
-      </div>
-    </motion.div>
+      </article>
+      <meta itemProp="name" content={title} />
+      <meta itemProp="description" content={description} />
+      <meta itemProp="price" content={price.toString()} />
+      <meta itemProp="priceCurrency" content="ETH" />
+    </motion.article>
   );
 };

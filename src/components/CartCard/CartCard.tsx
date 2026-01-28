@@ -78,8 +78,14 @@ export const CartCard = ({
             value={quantity}
             onIncrement={handleIncrement}
             onDecrement={handleDecrement}
+            aria-label={`Quantidade de ${title}`}
           />
-          <Button icon="trash" onClick={handleRemove} />
+          <Button
+            icon="trash"
+            onClick={handleRemove}
+            aria-label={`Remover ${title} do carrinho`}
+            type="button"
+          />
         </div>
       </section>
     </motion.div>

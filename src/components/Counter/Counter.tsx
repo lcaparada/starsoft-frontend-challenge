@@ -8,6 +8,7 @@ interface CounterProps {
   min?: number;
   max?: number;
   disabled?: boolean;
+  "aria-label"?: string;
 }
 
 export const Counter = ({
@@ -17,12 +18,17 @@ export const Counter = ({
   min = 0,
   max,
   disabled = false,
+  "aria-label": ariaLabel,
 }: CounterProps) => {
   const canDecrement = !disabled && value > min;
   const canIncrement = !disabled && (max === undefined || value < max);
 
   return (
-    <div className={styles.counter}>
+    <div
+      className={styles.counter}
+      role="group"
+      aria-label={ariaLabel || "Contador de quantidade"}
+    >
       <button
         type="button"
         className={`${styles.counterButton} ${styles.decrement}`}
@@ -30,9 +36,11 @@ export const Counter = ({
         disabled={!canDecrement}
         aria-label="Diminuir quantidade"
       >
-        <Icon name="minus" size={16} />
+        <Icon name="minus" size={16} aria-hidden="true" />
       </button>
-      <span className={styles.counterValue}>{value}</span>
+      <span className={styles.counterValue} aria-live="polite" aria-atomic="true">
+        {value}
+      </span>
       <button
         type="button"
         className={`${styles.counterButton} ${styles.increment}`}
@@ -40,7 +48,7 @@ export const Counter = ({
         disabled={!canIncrement}
         aria-label="Aumentar quantidade"
       >
-        <Icon name="plus" size={16} />
+        <Icon name="plus" size={16} aria-hidden="true" />
       </button>
     </div>
   );

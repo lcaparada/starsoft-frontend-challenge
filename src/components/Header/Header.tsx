@@ -20,15 +20,17 @@ export const Header = () => {
 
   return (
     <>
-      <header className={styles.header}>
-        <Icon name="logo" size={101} />
+      <header className={styles.header} role="banner">
+        <Icon name="logo" size={101} aria-hidden="true" />
         <button
           className={styles.bag}
           onClick={handleOpenCart}
-          aria-label="Abrir carrinho"
+          aria-label={`Abrir carrinho. ${itemsCount} ${itemsCount === 1 ? 'item' : 'itens'} no carrinho`}
+          aria-expanded="false"
+          type="button"
         >
-          <Icon name="bag" size={33} />
-          <span>{itemsCount}</span>
+          <Icon name="bag" size={33} aria-hidden="true" />
+          <span aria-live="polite" aria-atomic="true">{itemsCount}</span>
         </button>
       </header>
 

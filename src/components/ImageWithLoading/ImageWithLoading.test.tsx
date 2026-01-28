@@ -4,7 +4,7 @@ import { ImageWithLoading } from "./ImageWithLoading";
 
 jest.mock("next/image", () => ({
   __esModule: true,
-  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
+  default: ({ ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { priority?: boolean }) => {
     // eslint-disable-next-line @next/next/no-img-element
     return <img {...props} alt={props.alt || ""} />;
   },
