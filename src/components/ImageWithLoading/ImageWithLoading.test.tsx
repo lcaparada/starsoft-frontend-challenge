@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, waitFor, act } from "@testing-library/react";
+import { render, waitFor, fireEvent } from "@testing-library/react";
 import { ImageWithLoading } from "./ImageWithLoading";
 
 jest.mock("next/image", () => ({
@@ -42,9 +42,7 @@ describe("ImageWithLoading", () => {
     expect(skeleton).toBeInTheDocument();
 
     if (image) {
-      await act(async () => {
-        image.dispatchEvent(new Event("load"));
-      });
+      fireEvent.load(image);
     }
 
     await waitFor(() => {
@@ -61,9 +59,7 @@ describe("ImageWithLoading", () => {
     const image = container.querySelector("img");
 
     if (image) {
-      await act(async () => {
-        image.dispatchEvent(new Event("load"));
-      });
+      fireEvent.load(image);
     }
 
     await waitFor(() => {

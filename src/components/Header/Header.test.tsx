@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { Header } from "./Header";
 import React from "react";
 import { RootState } from "@/src/store";
@@ -19,8 +19,14 @@ jest.mock("../Cart/Cart", () => ({
   Cart: mockCartComponent,
 }));
 
-const mockLazyCart = mockCartComponent as unknown as React.LazyExoticComponent<React.ComponentType>;
-jest.spyOn(React, "lazy").mockImplementation(() => mockLazyCart);
+// Mock React.lazy para resolver imediatamente sem suspender
+jest.spyOn(React, "lazy").mockImplementation(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const LazyComponent = (props: React.ComponentProps<typeof mockCartComponent>) => {
+    return mockCartComponent();
+  };
+  return LazyComponent as unknown as React.LazyExoticComponent<React.ComponentType>;
+});
 
 const mockDispatch = jest.fn();
 
@@ -29,9 +35,8 @@ type Selector<T> = (state: RootState) => T;
 jest.mock("@/src/store/hooks", () => ({
   useAppDispatch: () => mockDispatch,
   useAppSelector: <T,>(selector: Selector<T>): T => {
-    // Mock do selector selectCartItemsCount
     if (selector.toString().includes("itemsCount") || selector.toString().includes("reduce")) {
-      return 0 as T; // Default items count
+      return 0 as T;
     }
     return selector({
       cart: {
@@ -55,58 +60,40 @@ describe("Header", () => {
     jest.clearAllMocks();
   });
 
-  it("should render header element", async () => {
-    let container: HTMLElement;
-    await act(async () => {
-      const result = render(<Header />);
-      container = result.container;
-    });
-    const header = container!.querySelector("header");
+  it("should render header element", () => {
+    const { container } = render(<Header />);
+    const header = container.querySelector("header");
     expect(header).toBeInTheDocument();
   });
 
-  it("should render logo icon", async () => {
-    await act(async () => {
-      render(<Header />);
-    });
+  it("should render logo icon", () => {
+    render(<Header />);
     const logoIcon = screen.getByTestId("icon-logo");
     expect(logoIcon).toBeInTheDocument();
     expect(logoIcon).toHaveAttribute("data-size", "101");
   });
 
-  it("should render bag button", async () => {
-    let container: HTMLElement;
-    await act(async () => {
-      const result = render(<Header />);
-      container = result.container;
-    });
-    const bagButton = container!.querySelector("button");
+  it("should render bag button", () => {
+    const { container } = render(<Header />);
+    const bagButton = container.querySelector("button");
     expect(bagButton).toBeInTheDocument();
   });
 
-  it("should render bag icon", async () => {
-    await act(async () => {
-      render(<Header />);
-    });
+  it("should render bag icon", () => {
+    render(<Header />);
     const bagIcon = screen.getByTestId("icon-bag");
     expect(bagIcon).toBeInTheDocument();
     expect(bagIcon).toHaveAttribute("data-size", "33");
   });
 
-  it("should render bag count", async () => {
-    await act(async () => {
-      render(<Header />);
-    });
+  it("should render bag count", () => {
+    render(<Header />);
     expect(screen.getByText("0")).toBeInTheDocument();
   });
 
-  it("should render bag icon and count inside bag button", async () => {
-    let container: HTMLElement;
-    await act(async () => {
-      const result = render(<Header />);
-      container = result.container;
-    });
-    const bagButton = container!.querySelector("button");
+  it("should render bag icon and count inside bag button", () => {
+    const { container } = render(<Header />);
+    const bagButton = container.querySelector("button");
     const bagIcon = bagButton?.querySelector('[data-testid="icon-bag"]');
     const bagCount = bagButton?.querySelector("span");
 
@@ -115,13 +102,9 @@ describe("Header", () => {
     expect(bagCount).toHaveTextContent("0");
   });
 
-  it("should have correct header structure", async () => {
-    let container: HTMLElement;
-    await act(async () => {
-      const result = render(<Header />);
-      container = result.container;
-    });
-    const header = container!.querySelector("header");
+  it("should have correct header structure", () => {
+    const { container } = render(<Header />);
+    const header = container.querySelector("header");
     const logoIcon = header?.querySelector('[data-testid="icon-logo"]');
     const bagButton = header?.querySelector("button");
 
@@ -130,13 +113,9 @@ describe("Header", () => {
     expect(bagButton).toBeInTheDocument();
   });
 
-  it("should render logo icon before bag button", async () => {
-    let container: HTMLElement;
-    await act(async () => {
-      const result = render(<Header />);
-      container = result.container;
-    });
-    const header = container!.querySelector("header");
+  it("should render logo icon before bag button", () => {
+    const { container } = render(<Header />);
+    const header = container.querySelector("header");
     const children = header?.children;
 
     expect(children?.[0]).toHaveAttribute("data-testid", "icon-logo");
@@ -144,33 +123,28 @@ describe("Header", () => {
     expect(children?.[0]?.parentElement?.tagName).toBe("HEADER");
   });
 
-  it("should open cart when bag button is clicked", async () => {
-    await act(async () => {
-      render(<Header />);
-    });
+  it("should open cart when bag button is clicked", () => {
+    render(<Header />);
     const bagButton = screen.getByLabelText(/Abrir carrinho/);
 
-    await act(async () => {
-      fireEvent.click(bagButton);
-    });
+    fireEvent.click(bagButton);
 
     expect(mockDispatch).toHaveBeenCalledWith({ type: "cart/openCart" });
   });
 
   it("should render cart component", async () => {
-    await act(async () => {
-      render(<Header />);
-    });
-    await waitFor(() => {
-      expect(screen.getByTestId("cart")).toBeInTheDocument();
-    });
+    render(<Header />);
+    // O Cart é lazy loaded, então aguardamos ele aparecer
+    await waitFor(
+      () => {
+        expect(screen.getByTestId("cart")).toBeInTheDocument();
+      },
+      { timeout: 1000 }
+    );
   });
 
-  it("should have aria-label on bag button", async () => {
-    await act(async () => {
-      render(<Header />);
-    });
-    // O aria-label agora inclui a contagem de itens
+  it("should have aria-label on bag button", () => {
+    render(<Header />);
     const bagButton = screen.getByLabelText(/Abrir carrinho/);
     expect(bagButton).toBeInTheDocument();
     expect(bagButton).toHaveAttribute("aria-expanded", "false");
