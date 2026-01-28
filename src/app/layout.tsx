@@ -18,7 +18,6 @@ export const metadata: Metadata = {
     template: "%s | Starsoft",
   },
   description: "Compre NFTs de forma segura e fácil.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
   openGraph: {
     title: "Starsoft - Marketplace de NFTs",
     description: "Compre NFTs de forma segura e fácil.",
